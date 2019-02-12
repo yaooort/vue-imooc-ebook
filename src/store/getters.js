@@ -1,4 +1,5 @@
 const book = {
-  test: state => state.book.text
+  fileName: state => state.book.fileName,
+  meunVisible: state => state.book.meunVisible
 }
 export default book

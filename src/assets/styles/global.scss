@@ -1,7 +1,5 @@
 @import "reset";
+@import "mixin";
+@import "transition";
 
-$ratio: 375 / 10;
-//定义像素转rem方法
-@function px2rem($px) {
-  @return $px / $ratio + rem;
-}
+
