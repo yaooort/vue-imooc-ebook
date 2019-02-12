@@ -1,6 +1,6 @@
 <template>
   <transition name="slide-down">
-    <div class="title-wrapper" v-show="meunVisible">
+    <div class="title-wrapper" v-show="menuVisible">
       <div class="left">
         <span class="icon-back" @click="back"></span>
       </div>
@@ -50,7 +50,7 @@
 
     .left {
       flex: 0 0 px2rem(60);
-      @include center;
+      @include left;
       margin-left: px2rem(15);
     }
 
