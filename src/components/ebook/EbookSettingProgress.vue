@@ -38,17 +38,32 @@
     mixins: [ebookMixin],
     methods: {
       onProgressChange (progress) {
-
+        this.setProgress(progress).then(() => {
+          this.disPlayProgress()
+          this.updateProgressBg()
+        })
       },
       onProgressInput (progress) {
-
+        this.setProgress(progress).then(() => {
+          this.updateProgressBg()
+        })
       },
       prevSection () {
 
       },
       nextSection () {
 
+      },
+      updateProgressBg () {
+        this.$refs.progress.style.cssText = `background-size:${this.progress}% 100% !important`
+      },
+      disPlayProgress () {
+        const cfi = this.currentBook.locations.cfiFromPercentage(this.progress / 100)
+        this.currentBook.rendition.display(cfi)
       }
+    },
+    updated () {
+      this.updateProgressBg()
     }
   }
 </script>
@@ -96,8 +111,6 @@
           width: 100%;
           -webkit-appearance: none;
           height: px2rem(2);
-          background: -webkit-linear-gradient(#999, #999) no-repeat, #ddd;
-          background-size: 0 100% !important;
           margin: 0 px2rem(10);
 
           &:focus {
@@ -121,7 +134,6 @@
         left: 0;
         bottom: px2rem(10);
         width: 100%;
-        color: #333;
         font-size: px2rem(12);
         text-align: center;
       }
