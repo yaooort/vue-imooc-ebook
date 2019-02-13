@@ -17,6 +17,14 @@
         </div>
         <div class="preview" :style="{fontSize: fontSizeList[fontSizeList.length - 1].fontSize + 'px'}">A</div>
       </div>
+      <div class="setting-font-family" @click="showSettingFontFamilyPopup">
+        <div class="setting-font-family-text-wrapper">
+          <span class="setting-font-family-text">{{ defaultFontFamily }}</span>
+        </div>
+        <div class="setting-font-family-icon-wrapper">
+          <span class="icon-forward"></span>
+        </div>
+      </div>
     </div>
   </transition>
 </template>
@@ -24,6 +32,7 @@
 <script>
   import { FONT_SIZE_LIST } from '../../utils/book'
   import { ebookMixin } from '../../utils/mixin'
+  import { saveFontSize } from '../../utils/localStorage'
 
   export default {
     name: 'EbookSettingFont',
@@ -36,7 +45,11 @@
     methods: {
       setFontSize (size) {
         this.setDefaultFontSize(size)
+        saveFontSize(this.filename, size)
         this.currentBook.rendition.themes.fontSize(size)
+      },
+      showSettingFontFamilyPopup () {
+        this.setFontFamilyVisible(true)
       }
     }
   }
@@ -50,12 +63,15 @@
     bottom: px2rem(48);
     left: 0;
     z-index: 101;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: px2rem(90);
     background: white;
     box-shadow: 0 px2rem(-8) px2rem(8) rgba(0, 0, 0, .15);
 
     .setting-font-size {
+      flex: 2;
       display: flex;
       height: 100%;
 
@@ -123,6 +139,20 @@
             }
           }
         }
+      }
+    }
+
+    .setting-font-family {
+      flex: 1;
+      font-size: px2rem(14);
+      @include center;
+
+      .setting-font-family-text-wrapper {
+        @include center;
+      }
+
+      .setting-font-family-icon-wrapper {
+        @include center;
       }
     }
   }
