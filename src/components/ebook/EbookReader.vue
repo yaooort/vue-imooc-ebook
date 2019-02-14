@@ -12,7 +12,8 @@
     getFontSize,
     saveFontSize,
     getTheme,
-    saveTheme
+    saveTheme,
+    getLocation
   } from '../../utils/localStorage'
   import Epub from 'epubjs'
 
@@ -20,32 +21,42 @@
   export default {
     mixins: [ebookMixin],
     methods: {
-      prevPage () {
-        //  进入上一页
-        if (this.rendition) {
-          this.rendition.prev()
-          this.hideTitleAndMenu()
-        }
+      initEpub () {
+        const baseUrl = process.env.VUE_APP_RES_URL + 'epub/' + this.fileName + '.epub'
+        this.book = new Epub(baseUrl)
+        this.setCurrentBook(this.book)
+        this.initRenditon()
+        this.initGesture()
+        this.registerStyle()
+        this.parseBook()
+        this.parsePages()
       },
-      nextPage () {
-        // 进入下一页
-        if (this.rendition) {
-          this.rendition.next()
-          this.hideTitleAndMenu()
-        }
+      initRenditon () {
+        this.rendition = this.book.renderTo('read', {
+          width: innerWidth,
+          height: innerHeight,
+          method: 'default'
+        })
+        const location = getLocation(this.filename)
+        // if(location) {
+        this.display(location, () => {
+          this.initTheme()
+          this.initFontSize()
+          this.initFontFamily()
+          this.initGlobalStyle()
+        })
       },
-      toggleTitleAndMenu () {
-        // 显示菜单标题
-        if (this.menuVisible) {
-          this.setSettingVisible(-1)
-          this.setFontFamilyVisible(false)
+      initTheme () {
+        let defaultTheme = getTheme(this.filename)
+        if (!defaultTheme) {
+          defaultTheme = this.themeList[0].name
+          saveTheme(this.filename, defaultTheme)
         }
-        this.setMenuVisible(!this.menuVisible)
-      },
-      hideTitleAndMenu () {
-        this.setMenuVisible(false)
-        this.setSettingVisible(-1)
-        this.setFontFamilyVisible(false)
+        this.setDefaultTheme(defaultTheme)
+        this.themeList.forEach(theme => {
+          this.rendition.themes.register(theme.name, theme.style)
+        })
+        this.rendition.themes.select(defaultTheme)
       },
       initFontSize () {
         let fontSize = getFontSize(this.filename)
@@ -65,33 +76,7 @@
           this.setDefaultFontFamily(font)
         }
       },
-      initTheme () {
-        let defaultTheme = getTheme(this.filename)
-        if (!defaultTheme) {
-          defaultTheme = this.themeList[0].name
-          saveTheme(this.filename, defaultTheme)
-        }
-        this.setDefaultTheme(defaultTheme)
-        this.themeList.forEach(theme => {
-          this.rendition.themes.register(theme.name, theme.style)
-        })
-        this.rendition.themes.select(defaultTheme)
-      },
-      initEpub () {
-        const baseUrl = process.env.VUE_APP_RES_URL + 'epub/' + this.fileName + '.epub'
-        this.book = new Epub(baseUrl)
-        this.setCurrentBook(this.book)
-        this.rendition = this.book.renderTo('read', {
-          width: innerWidth,
-          height: innerHeight,
-          method: 'default'
-        })
-        this.rendition.display().then(() => {
-          this.initTheme()
-          this.initFontSize()
-          this.initFontFamily()
-          this.initGlobalStyle()
-        })
+      initGesture () {
         //  监听触摸事件开始
         this.rendition.on('touchstart', event => {
           // 触摸起始X坐标
@@ -116,6 +101,34 @@
           event.preventDefault()
           event.stopPropagation()
         })
+      },
+      prevPage () {
+        //  进入上一页
+        if (this.rendition) {
+          this.rendition.prev().then(() => {
+            this.refreshLocation()
+          })
+          this.hideTitleAndMenu()
+        }
+      },
+      nextPage () {
+        // 进入下一页
+        if (this.rendition) {
+          this.rendition.next().then(() => {
+            this.refreshLocation()
+          })
+          this.hideTitleAndMenu()
+        }
+      },
+      toggleTitleAndMenu () {
+        // 显示菜单标题
+        if (this.menuVisible) {
+          this.setSettingVisible(-1)
+          this.setFontFamilyVisible(false)
+        }
+        this.setMenuVisible(!this.menuVisible)
+      },
+      registerStyle () {
         this.rendition.hooks.content.register(contents => {
           Promise.all([
               contents.addStylesheet(`${process.env.VUE_APP_RES_URL}fonts/daysOne.css`),
@@ -124,12 +137,25 @@
               contents.addStylesheet(`${process.env.VUE_APP_RES_URL}fonts/tangerine.css`)
             ]
           ).then(() => {
-            console.log('字体加载完毕')
+            // console.log('字体加载完毕')
           })
         })
+      },
+      parseBook () {
+        this.book.loaded.cover.then(cover => {
+          this.book.archive.createUrl(cover).then(url => {
+            this.setCover(url)
+          })
+        })
+        this.book.loaded.metadata.then(metadata => {
+          this.setMetadata(metadata)
+        })
+      },
+      parsePages () {
         this.book.ready.then(() => {
           return this.book.locations.generate(750 * (window.innerWidth / 375) * (getFontSize(this.filename) / 16)).then(locations => {
             this.setBookAvailable(true)
+            this.refreshLocation()
           })
         })
       }

@@ -3,12 +3,12 @@
     <div class="setting-wrapper" v-show="menuVisible && settingVisible === 2">
       <div class="setting-progress">
         <div class="reader-time-wrapper">
-          <span class="reader-time-text"></span>
+          <span class="reader-time-text">{{getReadTimeText()}}</span>
           <span class="icon-forward"></span>
         </div>
         <div class="progress-wrapper">
-          <div class="progress-icon-wrapper">
-            <span class="icon-back" @click="prevSection()"></span>
+          <div class="progress-icon-wrapper" @click="prevSection()">
+            <span class="icon-back"></span>
           </div>
           <input class="progress" type="range"
                  max="100"
@@ -18,12 +18,13 @@
                  :value="progress"
                  :disabled="!bookAvailable"
                  ref="progress">
-          <div class="progress-icon-wrapper">
-            <span class="icon-forward" @click="nextSection()"></span>
+          <div class="progress-icon-wrapper" @click="nextSection()">
+            <span class="icon-forward"></span>
           </div>
         </div>
         <div class="text-wrapper">
-          <span>{{bookAvailable ? progress + '%' : '加载中...'}}</span>
+          <span class="progress-section-text">{{getSelectionName}}</span>
+          <span>（{{bookAvailable ? progress + '%' : '加载中...'}}）</span>
         </div>
       </div>
     </div>
@@ -36,6 +37,20 @@
   export default {
     name: 'EbookSettingProgress',
     mixins: [ebookMixin],
+    computed: {
+      getSelectionName () {
+        if (this.section) {
+          const sectionInfo = this.currentBook.section(this.section)
+          if (sectionInfo && sectionInfo.href) {
+            const navigationInfo = this.currentBook.navigation.get(sectionInfo.href)
+            if (navigationInfo && navigationInfo.label) {
+              return navigationInfo.label
+            }
+          }
+        }
+        return ''
+      }
+    },
     methods: {
       onProgressChange (progress) {
         this.setProgress(progress).then(() => {
@@ -49,17 +64,29 @@
         })
       },
       prevSection () {
-
+        if (this.section > 0 && this.bookAvailable) {
+          this.displaySection(this.section - 1)
+        }
       },
       nextSection () {
-
+        if (this.section < this.currentBook.spine.length - 1 && this.bookAvailable) {
+          this.displaySection(this.section + 1)
+        }
+      },
+      displaySection (section) {
+        this.setSection(section).then(() => {
+          const sectionInfo = this.currentBook.section(this.section)
+          if (sectionInfo && sectionInfo.href) {
+            this.display(sectionInfo.href)
+          }
+        })
       },
       updateProgressBg () {
         this.$refs.progress.style.cssText = `background-size:${this.progress}% 100% !important`
       },
       disPlayProgress () {
         const cfi = this.currentBook.locations.cfiFromPercentage(this.progress / 100)
-        this.currentBook.rendition.display(cfi)
+        this.display(cfi)
       }
     },
     updated () {
@@ -134,8 +161,14 @@
         left: 0;
         bottom: px2rem(10);
         width: 100%;
+        padding: 0 px2rem(15);
+        box-sizing: border-box;
         font-size: px2rem(12);
-        text-align: center;
+        @include center;
+
+        &.progress-section-text {
+          @include ellipsis;
+        }
       }
     }
   }
