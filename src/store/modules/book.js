@@ -18,7 +18,8 @@ const book = {
     paginate: '',
     pagelist: null,
     offsetY: 0,
-    isBookmark: null
+    isBookmark: null,
+    bookHref: ''
   },
   mutations: {
     'SET_FILENAME': (state, fileName) => {
@@ -77,6 +78,9 @@ const book = {
     },
     'SET_IS_BOOKMARK': (state, isBookmark) => {
       state.isBookmark = isBookmark
+    },
+    'SET_BOOK_HREF': (state, bookHref) => {
+      state.bookHref = bookHref
     }
   }
 }

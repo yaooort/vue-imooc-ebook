@@ -50,8 +50,14 @@ const actions = {
   setPagelist: ({ commit }, pagelist) => {
     return commit('SET_PAGELIST', pagelist)
   },
+  setOffsetY: ({ commit }, offsetY) => {
+    return commit('SET_OFFSETY', offsetY)
+  },
   setIsBookmark ({ commit }, isBookmark) {
     return commit('SET_IS_BOOKMARK', isBookmark)
+  },
+  setBookHref ({ commit }, bookHref) {
+    return commit('SET_BOOK_HREF', bookHref)
   }
 }
 export default actions

@@ -45,7 +45,7 @@
     methods: {
       setFontSize (size) {
         this.setDefaultFontSize(size)
-        saveFontSize(this.filename, size)
+        saveFontSize(this.fileName, size)
         this.currentBook.rendition.themes.fontSize(size)
       },
       showSettingFontFamilyPopup () {

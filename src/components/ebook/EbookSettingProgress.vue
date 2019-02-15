@@ -39,15 +39,18 @@
     mixins: [ebookMixin],
     computed: {
       getSelectionName () {
-        if (this.section) {
-          const sectionInfo = this.currentBook.section(this.section)
-          if (sectionInfo && sectionInfo.href) {
-            const navigationInfo = this.currentBook.navigation.get(sectionInfo.href)
-            if (navigationInfo && navigationInfo.label) {
-              return navigationInfo.label
-            }
+        // if (this.section) {
+        //   const sectionInfo = this.currentBook.section(this.section)
+        //   console.log(this.bookHref)
+        //   if (sectionInfo && sectionInfo.href) {
+        if (this.bookHref) {
+          const navigationInfo = this.currentBook.navigation.get(this.bookHref)
+          if (navigationInfo && navigationInfo.label) {
+            return navigationInfo.label
           }
         }
+        //   }
+        // }
         return ''
       }
     },
@@ -64,6 +67,7 @@
         })
       },
       prevSection () {
+        console.log(this.section)
         if (this.section > 0 && this.bookAvailable) {
           this.displaySection(this.section - 1)
         }

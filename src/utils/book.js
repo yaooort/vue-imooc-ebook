@@ -83,7 +83,7 @@ export function removeCss (href) {
   for (let i = links.length; i >= 0; i--) {
     const link = links[i]
     if (link && link.getAttribute['href'] && link.getAttribute('href') === href) {
-        link.parentNode.removeChild(link)
+      link.parentNode.removeChild(link)
     }
   }
 }
@@ -102,4 +102,8 @@ export function getReadTimeByMinute (fileName) {
   } else {
     return Math.ceil(readTime / 60)
   }
+}
+
+export function flatten (array) {
+  return [].concat(...array.map(item => [].concat(item, ...flatten(item.subitems))))
 }

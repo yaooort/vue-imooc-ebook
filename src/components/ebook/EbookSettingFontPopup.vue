@@ -41,7 +41,7 @@
       },
       setFontFamily (item) {
         this.setDefaultFontFamily(item.font)
-        saveFontFamily(this.filename, item.font)
+        saveFontFamily(this.fileName, item.font)
         if (item.font === 'Default') {
           this.currentBook.rendition.themes.font('Times New Roman')
         } else {

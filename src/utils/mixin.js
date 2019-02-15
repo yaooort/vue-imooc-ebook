@@ -24,7 +24,8 @@ export const ebookMixin = {
         'paginate',
         'pagelist',
         'offsetY',
-        'isBookmark'
+        'isBookmark',
+        'bookHref'
       ]
     ),
     themeList () {
@@ -51,7 +52,9 @@ export const ebookMixin = {
         'setMetadata',
         'setPaginate',
         'setPagelist',
-        'setIsBookmark'
+        'setOffsetY',
+        'setIsBookmark',
+        'setBookHref'
       ]
     ),
     initGlobalStyle () {
@@ -76,14 +79,16 @@ export const ebookMixin = {
     },
     refreshLocation () {
       const location = this.currentBook.rendition.currentLocation()
-      // 滑动进度保持章节随之改变
-      if (location.start.index) {
-        this.setSection(location.start.index)
+      if (!location || !location.start) {
+          return
       }
+      this.setBookHref(location.start.href)
+      // 滑动进度保持章节随之改变
+      this.setSection(location.start.index)
       //  切换章节时进度条随之改变
       const progress = this.currentBook.locations.percentageFromCfi(location.start.cfi)
       this.setProgress(Math.floor(progress * 100))
-      saveLocation(this.filename, location.start.cfi)
+      saveLocation(this.fileName, location.start.cfi)
     },
     display (target, cb) {
       if (target) {
@@ -104,7 +109,7 @@ export const ebookMixin = {
       this.setFontFamilyVisible(false)
     },
     getReadTimeText () {
-      return this.$t('book.haveRead').replace('$1', getReadTimeByMinute(this.filename))
+      return this.$t('book.haveRead').replace('$1', getReadTimeByMinute(this.fileName))
     }
   }
 }
