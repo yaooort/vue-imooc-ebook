@@ -1,13 +1,17 @@
 <template>
   <div class="ebook" ref="ebook">
+    <ebook-header/>
     <ebook-title/>
     <ebook-reader/>
     <ebook-menu/>
     <ebook-bookmark/>
+    <ebook-footer/>
   </div>
 </template>
 
 <script>
+  import EbookHeader from '../../components/ebook/EbookHeader'
+  import EbookFooter from '../../components/ebook/EbookFooter'
   import EbookReader from '../../components/ebook/EbookReader'
   import EbookTitle from '../../components/ebook/EbookTitle'
   import EbookMenu from '../../components/ebook/EbookMenu'
@@ -18,7 +22,7 @@
   export default {
     name: 'index',
     mixins: [ebookMixin],
-    components: { EbookReader, EbookTitle, EbookMenu, EbookBookmark },
+    components: { EbookReader, EbookTitle, EbookMenu, EbookBookmark, EbookHeader, EbookFooter },
     watch: {
       offsetY (v) {
         if (!this.menuVisible && this.bookAvailable) {

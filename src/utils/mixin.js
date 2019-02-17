@@ -26,10 +26,24 @@ export const ebookMixin = {
         'offsetY',
         'isBookmark',
         'bookHref'
-      ]
-    ),
+      ]),
     themeList () {
       return themeList(this)
+    },
+    getSelectionName () {
+      // if (this.section) {
+      //   const sectionInfo = this.currentBook.section(this.section)
+      //   console.log(this.bookHref)
+      //   if (sectionInfo && sectionInfo.href) {
+      if (this.bookHref) {
+        const navigationInfo = this.currentBook.navigation.get(this.bookHref)
+        if (navigationInfo && navigationInfo.label) {
+          return navigationInfo.label
+        }
+      }
+      //   }
+      // }
+      return ''
     }
   },
   methods: {
@@ -90,7 +104,7 @@ export const ebookMixin = {
       this.setProgress(Math.floor(progress * 100))
       saveLocation(this.fileName, location.start.cfi)
       const bookmark = getBookmark(this.fileName)
-      console.table(bookmark)
+      // console.table(bookmark)
       if (bookmark) {
         if (bookmark.some(item => item.cfi === location.start.cfi)) {
           this.setIsBookmark(true)

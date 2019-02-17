@@ -1,4 +1,5 @@
 import { getReadTime } from './localStorage'
+import { realPx } from './utils'
 
 export const FONT_SIZE_LIST = [
   { fontSize: 12 },
@@ -25,9 +26,9 @@ export function themeList (vue) {
       style: {
         body: {
           'color': '#4c5059',
-          'background': '#cecece'
-          // 'padding-top': `${realPx(48)}px!important`,
-          // 'padding-bottom': `${realPx(48)}px!important`
+          'background': '#cecece',
+          'padding-top': `${realPx(48)}px!important`,
+          'padding-bottom': `${realPx(48)}px!important`
         }
       }
     },
@@ -37,9 +38,9 @@ export function themeList (vue) {
       style: {
         body: {
           'color': '#5c5b56',
-          'background': '#c6c2b6'
-          // 'padding-top': `${realPx(48)}px!important`,
-          // 'padding-bottom': `${realPx(48)}px!important`
+          'background': '#c6c2b6',
+          'padding-top': `${realPx(48)}px!important`,
+          'padding-bottom': `${realPx(48)}px!important`
         }
       }
     },
@@ -49,9 +50,9 @@ export function themeList (vue) {
       style: {
         body: {
           'color': '#404c42',
-          'background': '#a9c1a9'
-          // 'padding-top': `${realPx(48)}px!important`,
-          // 'padding-bottom': `${realPx(48)}px!important`
+          'background': '#a9c1a9',
+          'padding-top': `${realPx(48)}px!important`,
+          'padding-bottom': `${realPx(48)}px!important`
         }
       }
     },
@@ -61,9 +62,9 @@ export function themeList (vue) {
       style: {
         body: {
           'color': '#cecece',
-          'background': '#000000'
-          // 'padding-top': `${realPx(48)}px!important`,
-          // 'padding-bottom': `${realPx(48)}px!important`
+          'background': '#000000',
+          'padding-top': `${realPx(48)}px!important`,
+          'padding-bottom': `${realPx(48)}px!important`
         }
       }
     }

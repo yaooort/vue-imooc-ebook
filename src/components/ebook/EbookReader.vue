@@ -1,7 +1,13 @@
 <template>
   <div class="ebook-reader">
     <div id="read"></div>
-    <div class="ebook-reader-mask" @click="onMaskClick" @touchmove="move" @touchend="moveend"></div>
+    <div class="ebook-reader-mask"
+         @click="onMaskClick"
+         @touchmove="move"
+         @touchend="moveend"
+         @mousedown.left="onMouseEnter"
+         @mousemove="onMouseMove"
+         @mouseup="onMouseUp"></div>
   </div>
 </template>
 
@@ -23,7 +29,47 @@
   export default {
     mixins: [ebookMixin],
     methods: {
+      onMouseEnter (event) {
+        this.mouseState = 1
+        this.mouseStartTime = event.timeStamp
+        // 禁止事件继续传播
+        event.preventDefault()
+        event.stopPropagation()
+      },
+      onMouseMove (event) {
+        if (this.mouseState === 1) {
+          this.mouseState = 2
+        } else if (this.mouseState === 2) {
+          let offsetY = 0
+          if (this.firstOffsetY) {
+            offsetY = event.clientY - this.firstOffsetY
+            this.setOffsetY(offsetY)
+          } else {
+            this.firstOffsetY = event.clientY
+          }
+        }
+        event.preventDefault()
+        event.stopPropagation()
+      },
+      onMouseUp (event) {
+        if (this.mouseState === 2) {
+          this.setOffsetY(0)
+          this.firstOffsetY = null
+          this.mouseState = 3
+        } else {
+          this.mouseState = 4
+        }
+        const time = event.timeStamp - this.mouseStartTime
+        if (time < 200) {
+          this.mouseState = 4
+        }
+        event.preventDefault()
+        event.stopPropagation()
+      },
       onMaskClick (event) {
+        if (this.mouseState && (this.mouseState === 2 || this.mouseState === 3)) {
+          return
+        }
         //  点击区域的判断
         const offsetX = event.offsetX
         const width = window.innerWidth
@@ -53,6 +99,8 @@
       moveend (event) {
         this.setOffsetY(0)
         this.firstOffsetY = null
+        event.preventDefault()
+        event.stopPropagation()
       },
       initEpub () {
         const baseUrl = process.env.VUE_APP_RES_URL + 'epub/' + this.fileName + '.epub'
@@ -69,6 +117,7 @@
           width: innerWidth,
           height: innerHeight,
           method: 'default'
+          // flow: 'scrolled'
         })
         const location = getLocation(this.fileName)
         // if(location) {
