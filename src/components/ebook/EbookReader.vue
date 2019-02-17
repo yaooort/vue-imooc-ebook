@@ -99,8 +99,8 @@
       moveend (event) {
         this.setOffsetY(0)
         this.firstOffsetY = null
-        event.preventDefault()
-        event.stopPropagation()
+        // event.preventDefault()
+        // event.stopPropagation()
       },
       initEpub () {
         const baseUrl = process.env.VUE_APP_RES_URL + 'epub/' + this.fileName + '.epub'
@@ -252,6 +252,23 @@
       parsePages () {
         this.book.ready.then(() => {
           return this.book.locations.generate(750 * (window.innerWidth / 375) * (getFontSize(this.fileName) / 16)).then(locations => {
+            // console.table(locations)
+            // this.navigation.forEach(nav => {
+            //   nav.pagelist = []
+            // })
+            // locations.forEach(item => {
+            //   console.log(item)
+            //   // const loc = item.match(/\[(.*)\]!/)[1]
+            //   // this.navigation.forEach(nav => {
+            //   //   if (nav.href) {
+            //   //     const href = nav.href.match(/^(.*)\.[a-zA-Z0-9]{1,}$/)[1]
+            //   //     if (href === loc) {
+            //   //       nav.pagelist.push(item)
+            //   //     }
+            //   //   }
+            //   // })
+            // })
+            // console.table(this.navigation)
             this.setBookAvailable(true)
             this.refreshLocation()
           })
