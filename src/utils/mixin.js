@@ -1,6 +1,6 @@
 import { mapGetters, mapActions } from 'vuex'
 import { themeList, addCss, removeAllCss, getReadTimeByMinute } from './book'
-import { saveLocation } from './localStorage'
+import { getBookmark, saveLocation } from './localStorage'
 
 export const ebookMixin = {
   computed: {
@@ -80,7 +80,7 @@ export const ebookMixin = {
     refreshLocation () {
       const location = this.currentBook.rendition.currentLocation()
       if (!location || !location.start) {
-          return
+        return
       }
       this.setBookHref(location.start.href)
       // 滑动进度保持章节随之改变
@@ -89,6 +89,17 @@ export const ebookMixin = {
       const progress = this.currentBook.locations.percentageFromCfi(location.start.cfi)
       this.setProgress(Math.floor(progress * 100))
       saveLocation(this.fileName, location.start.cfi)
+      const bookmark = getBookmark(this.fileName)
+      console.table(bookmark)
+      if (bookmark) {
+        if (bookmark.some(item => item.cfi === location.start.cfi)) {
+          this.setIsBookmark(true)
+        } else {
+          this.setIsBookmark(false)
+        }
+      } else {
+        this.setIsBookmark(false)
+      }
     },
     display (target, cb) {
       if (target) {
