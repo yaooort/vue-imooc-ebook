@@ -28,7 +28,7 @@
         flapCardList: flapCardList,
         front: 0,
         back: 1,
-        intervalTime: 25
+        intervalTime: 25000
       }
     },
     watch: {
