@@ -58,6 +58,12 @@ const actions = {
   },
   setBookHref ({ commit }, bookHref) {
     return commit('SET_BOOK_HREF', bookHref)
+  },
+  setHotSearchOffsetY ({ commit }, hotSearchOffsetY) {
+    return commit('SET_HOT_SEARCH_OFFSETY', hotSearchOffsetY)
+  },
+  setFlapCardVisibile ({ commit }, flapCardVisibile) {
+    return commit('SET_FLAP_CARD_VISIBILE', flapCardVisibile)
   }
 }
 export default actions
