@@ -96,10 +96,10 @@
         this.front++
         this.back++
         const len = this.flapCardList.length
-        if (this.front > len) {
+        if (this.front >= len) {
           this.front = 0
         }
-        if (this.back > len) {
+        if (this.back >= len) {
           this.back = 0
         }
         this.flapCardList.forEach((item, index) => {
