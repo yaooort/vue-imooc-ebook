@@ -15,7 +15,10 @@ export const storeHomeMixin = {
       'setOffsetY',
       'setHotSearchOffsetY',
       'setFlapCardVisibile'
-    ])
+    ]),
+    showBookDetail (book) {
+      //  跳转图书详情页
+    }
   }
 }
 
