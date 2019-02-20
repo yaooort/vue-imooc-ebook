@@ -27,7 +27,7 @@
     mixins: [ebookMixin],
     methods: {
       back () {
-        console.log('点击返回')
+        this.$router.back()
       }
     }
   }

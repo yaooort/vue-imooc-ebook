@@ -20,6 +20,10 @@ const book = {
   isBookmark: state => state.book.isBookmark,
   bookHref: state => state.book.bookHref,
   hotSearchOffsetY: state => state.store.hotSearchOffsetY,
-  flapCardVisibile: state => state.store.flapCardVisibile
+  flapCardVisibile: state => state.store.flapCardVisibile,
+  isEditMode: state => state.store.isEditMode,
+  shelfList: state => state.store.shelfList,
+  shelfSelected: state => state.store.shelfSelected,
+  shelfTitleVisible: state => state.store.shelfTitleVisible
 }
 export default book
