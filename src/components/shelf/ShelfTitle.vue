@@ -1,16 +1,18 @@
 <template>
-  <div class="shelf-title">
-    <div class="shelf-title-text-wrapper">
-      <span class="shelf-title-text">{{$t('shelf.title')}}</span>
-      <span class="shelf-title-sub-text">{{selectedText}}</span>
+  <transition name="fade">
+    <div class="shelf-title" v-show="shelfTitleVisible">
+      <div class="shelf-title-text-wrapper">
+        <span class="shelf-title-text">{{$t('shelf.title')}}</span>
+        <span class="shelf-title-sub-text" v-show="isEditMode">{{selectedText}}</span>
+      </div>
+      <div class="shelf-title-btn-wrapper shelf-title-left" @click="clearCatch">
+        <span class="shef-title-btn-text">{{$t('shelf.clearCache')}}</span>
+      </div>
+      <div class="shelf-title-btn-wrapper shelf-title-right">
+        <span class="shef-title-btn-text" @click="onEditClick">{{isEditMode?$t('shelf.cancel'):$t('shelf.edit')}}</span>
+      </div>
     </div>
-    <div class="shelf-title-btn-wrapper shelf-title-left">
-      <span class="shef-title-btn-text">{{$t('shelf.clearCache')}}</span>
-    </div>
-    <div class="shelf-title-btn-wrapper shelf-title-right">
-      <span class="shef-title-btn-text">{{$t('shelf.edit')}}</span>
-    </div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -21,7 +23,16 @@
     mixins: [storeShelfMixin],
     computed: {
       selectedText () {
-        return this.$t('shelf.selectBook')
+        const setlctNumber = this.shelfSelected ? this.shelfSelected.length : 0
+        return setlctNumber === 0 ? this.$t('shelf.selectBook') : (setlctNumber === 1 ? this.$t('shelf.haveSelectedBook').replace('$1', setlctNumber) : this.$t('shelf.haveSelectedBooks').replace('$1', setlctNumber))
+      }
+    },
+    methods: {
+      onEditClick () {
+        this.setIsEditMode(!this.isEditMode)
+      },
+      clearCatch () {
+        //  清除缓存
       }
     }
   }
@@ -32,6 +43,7 @@
 
   .shelf-title {
     position: relative;
+    z-index: 130;
     width: 100%;
     height: px2rem(42);
     background: white;
