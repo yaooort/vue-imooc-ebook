@@ -1,5 +1,5 @@
 <template>
-  <div class="shelf-search-wrapper">
+  <div class="shelf-search-wrapper" :class="{'search-top':ifInputClicked,'hide-shadow':ifHideShadow}">
     <div class="shelf-search" :class="{'search-top':ifInputClicked}">
       <div class="search-wrapper">
         <div class="icon-search-wrapper">
@@ -42,9 +42,19 @@
     mixins: [storeShelfMixin],
     data () {
       return {
+        ifHideShadow: true,
         ifInputClicked: false,
         searchText: '',
         selectedTab: 1
+      }
+    },
+    watch: {
+      offsetY (offsetY) {
+        if (offsetY > 0 && this.ifInputClicked) {
+          this.ifHideShadow = false
+        } else {
+          this.ifHideShadow = true
+        }
       }
     },
     computed: {
@@ -104,6 +114,17 @@
     height: px2rem(94);
     font-size: px2rem(16);
     background: white;
+    box-shadow: 0 px2rem(2) px2rem(2) 0 rgba(0, 0, 0, 0.1);
+
+    &.hide-shadow {
+      box-shadow: none;
+    }
+
+    &.search-top {
+      position: fixed;
+      left: 0;
+      top: 0;
+    }
 
     .shelf-search {
       position: absolute;
