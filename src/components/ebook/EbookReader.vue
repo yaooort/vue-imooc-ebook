@@ -14,6 +14,7 @@
 <script>
   import { ebookMixin } from '../../utils/mixin'
   import { flatten } from '../../utils/book'
+  import { getLocalForage } from '../../utils/localForage'
   import {
     getFontFamily,
     saveFontFamily,
@@ -102,9 +103,8 @@
         // event.preventDefault()
         // event.stopPropagation()
       },
-      initEpub () {
-        const baseUrl = process.env.VUE_APP_RES_URL + 'epub/' + this.fileName + '.epub'
-        this.book = new Epub(baseUrl)
+      initEpub (url) {
+        this.book = new Epub(url)
         this.setCurrentBook(this.book)
         this.initRenditon()
         // this.initGesture()
@@ -276,12 +276,22 @@
       }
     },
     mounted () {
-      const fileName = this.$route.params.fileName.split('|').join('/')
-      if (fileName) {
-        this.setFileName(fileName).then(() => {
-          this.initEpub()
-        })
-      }
+      const bookSplit = this.$route.params.fileName.split('|')
+      const fileName = bookSplit[1]
+      getLocalForage(fileName, (err, blob) => {
+        if (!err && blob) {
+          this.setFileName(bookSplit.join('/')).then(() => {
+            this.initEpub(blob)
+          })
+        } else {
+          if (bookSplit) {
+            this.setFileName(bookSplit.join('/')).then(() => {
+              const baseUrl = process.env.VUE_APP_RES_URL + 'epub/' + this.fileName + '.epub'
+              this.initEpub(baseUrl)
+            })
+          }
+        }
+      })
     }
   }
 </script>

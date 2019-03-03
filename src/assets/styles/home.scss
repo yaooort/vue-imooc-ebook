@@ -30,6 +30,7 @@ $text-tiny-max-height: px2rem(12);
   font-weight: bold;
   @include ellipsis2(3);
 }
+
 .title-medium {
   font-size: $text-medium;
   line-height: $text-medium-lh;
@@ -38,6 +39,7 @@ $text-tiny-max-height: px2rem(12);
   font-weight: bold;
   @include ellipsis2(3);
 }
+
 .title-small {
   font-size: $text-small;
   line-height: $text-small-lh;
@@ -45,7 +47,9 @@ $text-tiny-max-height: px2rem(12);
   color: #444;
   font-weight: bold;
   @include ellipsis2(2);
+  padding-top: px2rem(2);
 }
+
 .sub-title-medium {
   line-height: $text-medium-lh;
   font-size: $text-medium;
@@ -53,6 +57,7 @@ $text-tiny-max-height: px2rem(12);
   color: #666;
   @include ellipsis2(2);
 }
+
 .sub-title {
   line-height: $text-small-lh;
   font-size: $text-small;
@@ -60,6 +65,7 @@ $text-tiny-max-height: px2rem(12);
   color: #666;
   @include ellipsis2(1);
 }
+
 .sub-title-tiny {
   line-height: $text-tiny-lh;
   font-size: $text-tiny;
@@ -67,6 +73,7 @@ $text-tiny-max-height: px2rem(12);
   color: #666;
   @include ellipsis2(1);
 }
+
 .third-title {
   line-height: $text-small-lh;
   font-size: $text-small;
@@ -74,6 +81,7 @@ $text-tiny-max-height: px2rem(12);
   color: #999;
   @include ellipsis2(1);
 }
+
 .third-title-tiny {
   line-height: $text-tiny-lh;
   font-size: $text-tiny;

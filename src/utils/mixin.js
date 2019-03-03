@@ -1,6 +1,8 @@
 import { mapGetters, mapActions } from 'vuex'
 import { themeList, addCss, removeAllCss, getReadTimeByMinute } from './book'
-import { getBookmark, saveLocation } from './localStorage'
+import { getBookmark, saveLocation, getBookShelf, saveBookShelf } from './localStorage'
+import { gotoBookDetail, appendAddToShelf } from './store'
+import { shelf } from '../api/store'
 
 export const storeShelfMixin = {
   computed: {
@@ -19,7 +21,24 @@ export const storeShelfMixin = {
       'setShelfSelected',
       'setShelfTitleVisible',
       'setOffsetY'
-    ])
+    ]),
+    showBookDetail (book) {
+      gotoBookDetail(this, book)
+    },
+    getShelfList () {
+      let shelfList = getBookShelf()
+      if (!shelfList) {
+        shelf().then(response => {
+          if (response.status === 200 && response.data && response.data.bookList) {
+            shelfList = appendAddToShelf(response.data.bookList)
+            saveBookShelf(shelfList)
+            this.setShelfList(shelfList)
+          }
+        })
+      } else {
+        this.setShelfList(shelfList)
+      }
+    }
   }
 }
 
@@ -38,14 +57,7 @@ export const storeHomeMixin = {
       'setFlapCardVisibile'
     ]),
     showBookDetail (book) {
-      //  跳转图书详情页
-      this.$router.push({
-        path: '/store/detail',
-        query: {
-          fileName: book.fileName,
-          category: book.categoryText
-        }
-      })
+      gotoBookDetail(this, book)
     }
   }
 }
@@ -83,7 +95,7 @@ export const ebookMixin = {
       //   const sectionInfo = this.currentBook.section(this.section)
       //   console.log(this.bookHref)
       //   if (sectionInfo && sectionInfo.href) {
-      if (this.bookHref) {
+      if (this.bookHref && this.currentBook.navigation) {
         const navigationInfo = this.currentBook.navigation.get(this.bookHref)
         if (navigationInfo && navigationInfo.label) {
           return navigationInfo.label

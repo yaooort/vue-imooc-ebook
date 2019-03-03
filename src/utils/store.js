@@ -1,3 +1,34 @@
+export function gotoBookDetail (vue, book) {
+  //  跳转图书详情页
+  vue.$router.push({
+    path: '/store/detail',
+    query: {
+      fileName: book.fileName,
+      category: book.categoryText
+    }
+  })
+}
+
+export function gotoStoreHome (vue) {
+  vue.$router.push({
+    path: '/store/home'
+  })
+}
+
+export function appendAddToShelf (list) {
+  list.push(
+    {
+      id: -1,
+      type: 3
+    }
+  )
+  return list
+}
+
+export function removeAddFromShelf (list) {
+  return list.filter(item => item.type !== 3)
+}
+
 export const flapCardList = [
   {
     r: 255,
