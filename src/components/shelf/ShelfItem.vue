@@ -46,6 +46,14 @@
               this.showBookDetail(this.data)
               break
             case 2:
+              this.$router.push(
+                {
+                  path: '/store/category',
+                  query: {
+                    title: this.data.title
+                  }
+                }
+              )
               break
             case 3:
               gotoStoreHome(this)

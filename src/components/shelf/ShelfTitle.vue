@@ -2,14 +2,17 @@
   <transition name="fade">
     <div class="shelf-title" :class="{'hide-shadow':ifHideShadow}" v-show="shelfTitleVisible">
       <div class="shelf-title-text-wrapper">
-        <span class="shelf-title-text">{{$t('shelf.title')}}</span>
+        <span class="shelf-title-text">{{title}}</span>
         <span class="shelf-title-sub-text" v-show="isEditMode">{{selectedText}}</span>
       </div>
-      <div class="shelf-title-btn-wrapper shelf-title-left" @click="clearCatch">
+      <div class="shelf-title-btn-wrapper shelf-title-left" @click="clearCatch" v-if="!ifShowBack">
         <span class="shef-title-btn-text">{{$t('shelf.clearCache')}}</span>
       </div>
       <div class="shelf-title-btn-wrapper shelf-title-right">
         <span class="shef-title-btn-text" @click="onEditClick">{{isEditMode?$t('shelf.cancel'):$t('shelf.edit')}}</span>
+      </div>
+      <div class="shelf-title-btn-wrapper shelf-title-left" @click="back" v-if="ifShowBack">
+        <span class="icon-back"></span>
       </div>
     </div>
   </transition>
@@ -23,6 +26,10 @@
   export default {
     name: 'ShelfTitle',
     mixins: [storeShelfMixin],
+    props: {
+      title: { type: String },
+      ifShowBack: { type: Boolean, default: false }
+    },
     computed: {
       selectedText () {
         const setlctNumber = this.shelfSelected ? this.shelfSelected.length : 0
@@ -44,11 +51,19 @@
       }
     },
     methods: {
+      back () {
+        this.$router.back()
+      },
       onEditClick () {
         if (!this.isEditMode) {
           this.setShelfSelected([])
           this.shelfList.forEach(item => {
             item.selected = false
+            if (item.itemList) {
+              item.itemList.forEach(subItem => {
+                subItem.selected = false
+              })
+            }
           })
         }
         this.setIsEditMode(!this.isEditMode)
@@ -116,7 +131,10 @@
         font-size: px2rem(14);
         color: #666;
       }
-
+      .icon-back{
+        font-size: px2rem(20);
+        color: #666;
+      }
       &.shelf-title-left {
         left: 0;
         padding-left: px2rem(15);

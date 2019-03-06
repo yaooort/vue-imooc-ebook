@@ -5,7 +5,9 @@ const store = {
     isEditMode: false, // 是否进入编辑模式
     shelfList: [], // 书架图书列表
     shelfSelected: [], // 书架图书选中的列表
-    shelfTitleVisible: true // 书架标题的显示状态
+    shelfTitleVisible: true, // 书架标题的显示状态
+    shelfCategory: [],
+    currentType: 1
   },
   mutations: {
     SET_HOT_SEARCH_OFFSETY (state, offsetY) {
@@ -25,6 +27,12 @@ const store = {
     },
     SET_SHELF_TITLE_VISIBLE (state, visible) {
       state.shelfTitleVisible = visible
+    },
+    SET_SHELF_CATEGORY (state, shelfCategory) {
+      state.shelfCategory = shelfCategory
+    },
+    SET_SHELF_CURRENT_TYPE (state, currentType) {
+      state.currentType = currentType
     }
   }
 }

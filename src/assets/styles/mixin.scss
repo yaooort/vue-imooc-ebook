@@ -13,7 +13,7 @@ $animationType: linear;
   align-items: center;
 }
 
-@mixin adsCenter{
+@mixin adsCenter {
   position: absolute;
   top: 0;
   left: 0;
@@ -28,7 +28,7 @@ $animationType: linear;
   align-items: center;
 }
 
-@mixin top{
+@mixin top {
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -56,6 +56,15 @@ $animationType: linear;
   word-break: keep-all;
 }
 
+@mixin scroll {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 .icon {
   color: #666666;
   font-size: px2rem(16);
@@ -74,16 +83,22 @@ $animationType: linear;
   align-items: flex-start;
 }
 
-@mixin columnTop{
+@mixin columnTop {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 }
 
-@mixin columnCenter{
+@mixin columnCenter {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+@mixin leftBottom {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
 }
