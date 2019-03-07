@@ -1,3 +1,15 @@
+export function computeId (list) {
+  return list.map((book, index) => {
+    if (book.type !== 3) {
+      book.id = index + 1
+      if (book.itemList) {
+        book.itemList = computeId(book.itemList)
+      }
+    }
+    return book
+  })
+}
+
 export function gotoBookDetail (vue, book) {
   //  跳转图书详情页
   vue.$router.push({
