@@ -173,8 +173,6 @@
           this.setShelfList([])
           this.getShelfList()
           this.simpleToast(this.$t('shelf.clearCacheSuccess'))
-        }, err => {
-          console.log(err)
         })
       }
     }

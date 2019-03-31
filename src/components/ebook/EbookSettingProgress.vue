@@ -51,7 +51,7 @@
         })
       },
       prevSection () {
-        console.log(this.section)
+        // console.log(this.section)
         if (this.section > 0 && this.bookAvailable) {
           this.displaySection(this.section - 1)
         }

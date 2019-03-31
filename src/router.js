@@ -45,6 +45,10 @@ export default new Router({
         {
           path: 'detail',
           component: () => import('./views/store/StoreDetail.vue')
+        },
+        {
+          path: 'speaking',
+          component: () => import('./views/store/StoreSpeaking.vue')
         }
       ]
     }

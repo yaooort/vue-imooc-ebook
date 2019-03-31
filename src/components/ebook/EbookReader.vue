@@ -286,7 +286,7 @@
         } else {
           if (bookSplit) {
             this.setFileName(bookSplit.join('/')).then(() => {
-              const baseUrl = process.env.VUE_APP_RES_URL + 'epub/' + this.fileName + '.epub'
+              const baseUrl = process.env.VUE_APP_EPUB_URL + '/' + this.fileName + '.epub'
               this.initEpub(baseUrl)
             })
           }

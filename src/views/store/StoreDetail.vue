@@ -81,6 +81,10 @@
   import { detail } from '../../api/store'
   import { px2rem, realPx } from '../../utils/utils'
   import Epub from 'epubjs'
+  import { getLocalForage } from '../../utils/localForage'
+  import { addToShelf, removeFromBookShelf } from '../../utils/store'
+  import { storeShelfMixin } from '../../utils/mixin'
+  import { getBookShelf } from '../../utils/localStorage'
 
   global.ePub = Epub
 
@@ -91,6 +95,7 @@
       BookInfo,
       Toast
     },
+    mixins: [storeShelfMixin],
     computed: {
       desc () {
         if (this.description) {
@@ -122,10 +127,10 @@
         return this.metadata ? this.metadata.creator : ''
       },
       inBookShelf () {
-        if (this.bookItem && this.bookShelf) {
+        if (this.bookItem && this.shelfList) {
           const flatShelf = (function flatten (arr) {
             return [].concat(...arr.map(v => v.itemList ? [v, ...flatten(v.itemList)] : v))
-          })(this.bookShelf).filter(item => item.type === 1)
+          })(this.shelfList).filter(item => item.type === 1)
           const book = flatShelf.filter(item => item.fileName === this.bookItem.fileName)
           return book && book.length > 0
         } else {
@@ -153,6 +158,12 @@
     },
     methods: {
       addOrRemoveShelf () {
+        if (this.inBookShelf) {
+          this.setShelfList(removeFromBookShelf(this.bookItem))
+        } else {
+          addToShelf(this.bookItem)
+          this.setShelfList(getBookShelf())
+        }
       },
       showToast (text) {
         this.toastText = text
@@ -160,10 +171,30 @@
       },
       readBook () {
         this.$router.push({
-          path: `/ebook/${this.categoryText}|${this.fileName}`
+          path: `/ebook/${this.bookItem.categoryText}|${this.fileName}`
         })
       },
       trialListening () {
+        getLocalForage(this.bookItem.fileName, (err, blob) => {
+          if (!err && blob && blob instanceof Blob) {
+            // 离线解析
+            this.$router.push({
+              path: `/store/speaking`,
+              query: {
+                fileName: this.bookItem.fileName
+              }
+            })
+          } else {
+            // 在线解析
+            this.$router.push({
+              path: `/store/speaking`,
+              query: {
+                fileName: this.bookItem.fileName,
+                opf: this.opf
+              }
+            })
+          }
+        })
       },
       read (item) {
         this.$router.push({
@@ -265,6 +296,9 @@
     },
     mounted () {
       this.init()
+      if (!this.shelfList || this.shelfList.length === 0) {
+        this.getShelfList()
+      }
     }
   }
 </script>
